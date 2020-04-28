@@ -1,0 +1,216 @@
+\documentclass[a4paper,12pt]{article} % тип документа
+
+% report, book
+
+
+
+%  Русский язык
+
+\usepackage[T2A]{fontenc}			% кодировка
+\usepackage[utf8]{inputenc}			% кодировка исходного текста
+\usepackage[english,russian]{babel}	% локализация и переносы
+\usepackage{graphicx}
+\usepackage{tikz}
+\graphicspath{{./}}
+\DeclareGraphicsExtensions{.png,.jpg}
+
+
+% Математика
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+
+
+\usepackage{wasysym}
+
+%Заговолок
+\author{Бредихин Александр}
+\title{Домашняя работа №8}
+
+
+
+\begin{document} % начало документа
+\maketitle
+
+\subsection*{Задача 1}
+\textit{Задача:} докажите, что $\mathcal{ZPP} = \mathcal{RP} \cap co\mathcal{RP}$\smallskip \\
+
+Докажем утверждение в две стороны:\\
+
+1) Пусть $ A \in \mathcal{ZPP}$ и докажем, что $ A \in \mathcal{RP} $. Пусть $ B $ -- алгоритм, распознающий $ A $ и рабоающий в среднем за $ p(n) $ (по определению $ \mathcal{ZPP}$ ). Запустим этот алгоритм на $ 2p(n) $ шагов и будем возвращать тот же ответ, если алгоритм завершается и 0 в противном случае. Получается: \\
+если $ x \in A$ по неравенству Маркова с вероятностью не меньше 1/2 алгоритм закончит работу и потому ответ будет 1\\
+если $ x \notin A $ то в любом случае будет возвращён ответ 0\\
+
+По определению $ A \in \mathcal{RP} $, аналогично доказываем, что $ A \in co\mathcal{RP} $ делаем то же самое, только теперь при отсутствие ответа возвращаем 0 вместо 1.\\
+
+2) Обратно: пусть $ A \in \mathcal{RP} \cap co\mathcal{RP} $, а $ B $ - алгоритм, который не допускает ошибок первого рода (то есть если $ x \notin A $ но алгоритм выдаёт 1) (такой алгоритм найдётся по определению $ \mathcal{RP} $) и алгоритм $ C $, который не допускает ошибок 2го рода (то есть $ x \in A$ но алгоритм выдаёт 0) (такой есть по определению $co\mathcal{RP}$). \\
+Запустим алгоритм $ B $ на входе $ x $. Если он вернул 1, то точно $ x \in A $, иначе запустим $ C $: если он вернул 0, то точно $ x \notin A $. Так будем повторять с новыми битами пока не получим: $ B(x) = 1 $ или $ C(x) = 0 $. Вероятность получения ответа на
+каждой стадии не меньше 1/2, , поэтому ожидаемое число стадий не больше 2.\\
+Получили, что по определению $ A \in \mathcal{ZPP} $.\\
+Утверждение доказано.
+
+\subsection*{Задача 2}
+\textit{Задача:} пусть $\mathbf{A}, \mathbf{B}, \mathbf{C}$~---~целочисленные матрицы $n\times n$, элементы которых по абсолютной величине не больше $h$. Для проверки равенства $\mathbf{AB}=\mathbf{C}$ пользуемся $\mathbf{x}$~---~случайным $n$-мерным вектором, состоящим из чисел $0\dotsc N-1$. Если $\mathbf{A}(\mathbf{B}\mathbf {x}) = \mathbf{C}\mathbf{x}$, предполагаем, что равенство верное, иначе неверное. Для решения обратите внимание на лемму Шварца-Зиппеля.
+\begin{itemize}
+\item Задаём некоторую вероятность ошибки $p$. Как надо выбрать $N$, чтобы достичь ошибку, не большую $p$?
+\item Определите, в каких вероятностных классах ($\mathcal{BPP}, \mathcal{RP}, co\mathcal{RP}, \mathcal{ZPP}$) лежит такая постановка задачи.
+\item Выбираем также случайный $\mathbf{y}$ с теми же параметрами. Равенство проверяем так: $\mathbf{y}^T\mathbf{AB}\mathbf{x} = \mathbf{y}^T\mathbf{C}\mathbf{x}$. Оцените $N$ для такого случая.\\
+\end{itemize}\smallskip 
+
+1) Рассмотрим поле вещественных чисел и конечное подмножество $ S = 0\dotsc N-1 $ в этом поле. Возьмём вектор из одних 1 размером $ n $ (заметим, что $ 1 \in S $ для $ N >1 $). Рассмотрим следующие выражение:
+$$
+(1 \ldots 1) \mathbf{AB - C} \overrightarrow{x} = \text{многочлен 1ой степени от x} = F
+$$ 
+Это выражение будет являться многочленом 1ой степени. Все условия леммы Шварца-Зиппеля выполнены, поэтому \\
+$ P(F = 0) \leqslant \frac{d}{|S|} $\\
+Ошибкой в наше задаче является то, что $\mathbf{AB}\neq\mathbf{C}$, но $\mathbf{A}(\mathbf{B}\mathbf {x}) = \mathbf{C}\mathbf{x}$, то есть полученный многочлен равен 0 (что и получаем из леммы). В нашем случае $ |S| = N $, $ d = 1 $. Поэтому, чтобы достичь ошибку, не большую $p$ должно выполнится неравенство $ \frac{1}{N} < p $, то есть возьмём $ N = \left[\frac{1}{p} \right] + 1 $ (это и будет ответом).\\
+
+2) заметим, что если $\mathbf{AB}=\mathbf{C}$, то всегда верно $\mathbf{A}(\mathbf{B}\mathbf {x}) = \mathbf{C}\mathbf{x}$ (из свойств линейной алгебры), поэтому вероятность
+\[
+x \in L \implies \mathbb{P}\{M(x)=1\} = 1
+\]
+
+Если $\mathbf{AB}\neq\mathbf{C}$, то вероятность ошибки (из предыдущего пункта) равна $ \frac{1}{N} $, следовательно вероятность правильного ответа: $ 1 - \frac{1}{N} \geqslant \frac{2}{3} $ (можем взять $ N \geqslant 3 $). Получается по определению наш язык лежит в $ \mathcal{BPP} $ и в $ co\mathcal{RP} $\\
+
+Язык не лежит в $ \mathcal{RP} $, так как всегда будет вероятность ошибки $ \frac{1}{N} $ (то есть вероятность правильного ответа уже не 1), следовательно не выполняется определение. Из первой задачи следует, что язык также не лежит в $ \mathcal{ZPP} $\\
+
+3) теперь выбираем вектор на который домнажаем слева произвольным образом, то есть он может также занулять коэффициенты и давать ошибку. Найдём её вероятность используя формулу полной вероятности:
+$$
+P(F(x)=0) = P(F(x)=0|y=0) \cdot P(y=0) + P(F(x)=0|y\neq 0)\cdot P(y \neq 0)
+$$
+Заметим, что $ P(F(x)=0|y=0) = 1 $, $ P(y=0) $, $ P(F(x)=0|y\neq 0) \leqslant \frac{1}{N} $, $ P(y \neq 0) = \frac{N-1}{N}$ (используем комбинаторику и 1ый пункт задачи). Получаем, что \\
+$ P(F(x)=0) \leqslant \frac{1}{N} + \frac{N-1}{N^2} = \frac{2N-1}{N^2} < p $. Поэтому можем взять $ N \geqslant \left[\frac{\sqrt{1-p}+1}{p} \right] +1 $ это и будет ответом.
+
+
+\subsection*{Задача 3}
+\textit{Задача:} Покажите, что в задаче сравнения больших чисел вероятность ошибки для больших $n$ меньше $\frac{3}{4}$. Будут ли такие $n$, для которых вероятность ошибки окажется не больше $\frac{1}{2}$. Предложите способ улучшить этот результат: какие параметры задачи можно подкорректировать, чтобы вероятность ошибки была, к примеру, не больше $\frac{1}{8}$?\\ \smallskip
+
+Из семинара: случайно выберем некоторое простое число $p$, лежащее на отрезке $[n, 2n]$. Оно точно найдётся по постулату Бертрана. Далее будем сравнивать остатки от деления $X$ и $Y$ на $p$ ($U$ и $V$) соответственно. \\
+$|p| \approx \log n \implies |U|, |V| \approx \log n$.
+Найдём вероятность ошибки, то есть $\mathbb{P}\{U = V, X \neq Y\} = \mathbb{P}\{X\neq Y, X \equiv_p Y\}$. \\
+У числа $|X-Y|$ существует как минимум один делитель на отрезке $[n, 2n]$ (число $p$). Обозначим за $p_1, \dotsc, p_m$ все делители из этого отрезка.
+\[2^{n} \geqslant |X-Y| \geqslant p_1p_2\dotsc p_m\geqslant n^m \implies m \leqslant c\dfrac{n}{\ln n}\]
+Зная, что количество простых чисел в натуральном ряду растёт как $\frac{n}{\ln n}$ для достаточно больших $n$, осталось оценить вероятность неблагоприятного исхода. Сделаем это))\\
+
+1) Количество всего простых чисел на отрезке $[n, 2n]$ из факта выше будет равно: 
+$$
+A = \frac{2n}{\ln(2n)} - \frac{n}{\ln(n)}
+$$
+Тогда вероятность ошибки при сравнении чисел:
+$$
+\frac{m}{A} \leq \frac{\ln 2 \cdot \frac{n}{\ln n}}{\frac{2 n}{\ln 2 n}-\frac{n}{\ln n}}=\frac{\ln 2 \frac{n}{\ln n}}{\frac{2 n}{\ln n+\ln 2}-\frac{n}{\ln n}}=\frac{\ln 2}{\frac{2}{1+\frac{\ln 2}{2 n}}-1}=\ln 2
+$$
+Получаем, что $ P(\text{ошибка}) \leq \ln 2 < \frac{3}{4} $ что и требовалось показать. \\
+
+2) От противного: пусть каждое второе плохое, тогда у $ |X-Y| $ n/2 простых. Делаем аналогичные рассуждения и получаем противоречие, что $ n^{n/2}>2^{n} $ (из финального неравенства на семинаре).\\
+ 
+3) Подкорректируем параметры алгоритма, чтобы получить вероятность ошибки не больше $\frac{1}{8}$ (то есть меньше $\frac{1}{8}$)\\
+Для этого будем выбирать $ p $ лежащее на отрезке $[n, 8n]$. Все рассуждения сохраняются, но теперь 
+$$
+A = \frac{8n}{\ln(8n)} - \frac{n}{\ln(n)}
+$$
+Тогда вероятность ошибки при сравнении чисел:
+$$
+\frac{m}{A} \leq \frac{\ln 2 \cdot \frac{n}{\ln n}}{\frac{8 n}{\ln 8 n}-\frac{n}{\ln n}}=\frac{\ln 2 \frac{n}{\ln n}}{\frac{8 n}{\ln n+\ln 8}-\frac{n}{\ln n}}=\frac{\ln 2}{\frac{8}{1+\frac{\ln 2}{2 n}}-1}= \frac{\ln 2}{7} \leqslant \frac{1}{8}
+$$
+Увеличили точность до нужной.
+
+
+\subsection*{Задача 4}
+\textit{Задача:} определите, в каких из вероятностных классов лежит вероятностный алгоритм для поиска выполняющего набора РОВНО2КНФ, разобранный на семинаре. \\ \smallskip
+
+Докажем, что данный алгоритм лежит в $ BPP $, то есть разрешается за полиномиальное количество тактов с двусторонней ошибкой под двусторонней ошибкой подразумевается это
+\[
+x \in L \implies \mathbb{P}\{M(x)=1\} \geqslant \dfrac{2}{3}
+\]
+\[
+x \not\in L \implies \mathbb{P}\{M(x)=0\} \geqslant \dfrac{2}{3}
+\]
+
+Из семинара получили, что вероятность не найти набор за $ k $ раз по $ 2n^2 $ шагов равна $ \frac{1}{2^k} $ то есть мы можем установить точность (то есть полиномиальное количество шагов, которое нам нужно совершить) что если 
+\[
+S \in \text{РОВНО2КНФ} \implies \mathbb{P}\{M(x)=1\} \geqslant \dfrac{2}{3}
+\]
+(сделаем 3 раза по $ 2n^2 $ шагов, тогда вероятность найти набор равна $ \frac{7}{8} \geqslant \frac{2}{3} $). Также данный алгоритм если нет исполняющего набора, не ошибается (он не находит его за отведённое количество шагов и говорит, что его нет), то есть 
+\[
+S \not\in \text{РОВНО2КНФ} \implies \mathbb{P}\{M(x)=0\} = 1 \geqslant \frac{2}{3}
+\]
+Получается, по определению данный алгоритм лежит в $ BPP $.\\
+
+Из данных рассждений также понятно, что он лежит и в $ RP $ по определению:
+\[
+S \in \text{РОВНО2КНФ} \implies \mathbb{P}\{M(x)=1\} \geqslant \dfrac{1}{2}
+\]
+\[
+S \not\in \text{РОВНО2КНФ} \implies \mathbb{P}\{M(x)=0\} = 1 
+\]
+
+Но этот алгоритм не лежит в $ coRP $, так как он не сможет с вероятностью 1 сказать есть выполняющий набор или нет: всегда есть неточность сделав k шагов с вероятностью $ \frac{1}{2^k} $ совершить ошибку (то есть выполняющий набор будет, но мы прекратим наш алгоритм, так как достигнем наперёд заданной нам точности и не найдём его). Следовательно, $ \notin coRP $.\\
+
+Из задачи 1, так как $\mathcal{ZPP} = \mathcal{RP} \cap co\mathcal{RP}$ следует, что алгоритм не принадлежит $ \mathcal{ZPP} $.
+
+\subsection*{Задача 5}
+\textit{Задача:} (Доп)$\;$Докажите теорему Татта о паросочетаниях.\\
+
+Введём обозначения: $ odd(G) $ -- число нечетных компонент связности в графе G, где нечетная компонента это компонента связности, содержащая нечетное число вершин.\\
+
+Множество Татта графа G — множество $ S\subset V $, для которого выполнено условие: $odd(G/S)>|S|$\\
+
+В графе G существует полное паросочетание $\Leftrightarrow \forall S \subset V$ выполнено условие: $odd(G/S)\leqslant|S|$ (то есть в графе G нет ни одного множества Татта)\\
+Доказательство:\\
+$ \Rightarrow $\\
+Рассмотрим M — полное паросочетание в графе G и множество вершин $ V $.
+
+Одна из вершин каждой нечетной компоненты связности графа $ (G/S)$ соединена ребром паросочетания M с какой-то вершиной из S. Иначе мы не сможем покрыть паросочетанием все вершины этой компоненты связности и получим противоречие: полное паросочетание существует по условию теоремы. Таким образом, получаем, что $odd(G/S)\leqslant|S|$.\\
+$ \Leftarrow $\\
+Пусть для графа G выполнено, что $odd(G/S)\leqslant|S|$, но полного паросочетания в этом графе не существует.\\
+
+
+Рассмотрим граф K и множество вершин U, которое получается следующим образом: граф K -- граф, полученный из G добавлением ребер, при этом в K нет полного паросочетания, но оно появляется при добавлении любого нового ребра. Так как новых вершин не добавлялось, то $ K = (V, E_K)$, множество вершин $U = \{v \in V: deg_K(v) = n -1\}$ \\
+Используем лемму, которая утверждает $ K\\U $ -- объединение несвязных полных графов. Так как число нечетных компонент не увеличивается при добавлении новых ребер, то $ \forall S \subset V $ выполнено $ odd(K/S)\leqslant (G/S) \leqslant |S|$. По лемме:$ K/U $— объединение несвязных полных графов.\\
+Понятно, что в каждой четной компоненте связности графа $ K/U $ мы можем построить полное паросочетание. В каждой нечетной компоненте этого графа построим паросочетание, которое покрывает все вершины кроме одной, оставшуюся непокрытой вершину, соединим с какой-то вершиной множества U. При этом мы будем использовать различные вершины из U. Почему это возможно? Так как $ odd(K/S)\leqslant |U| $. Если все вершины множества U оказались покрытыми, то мы получили полное паросочетание в графе K. Получили противоречие с тем, что по построению в K нет полного паросочетания.\\
+Значит, в U осталось какое-то количество непокрытых вершин, при этом их четное число, так как число вершин в K четно, так как $ odd(K/\oslash)\leqslant |\oslash| = 0 $ и уже покрыто паросочетанием четное число вершин. Зная что в множество U входят вершины, которые в K смежны со всеми остальными, то мы сможем разбить оставшиеся вершины на пары и покрыть их паросочетанием.\\
+
+Таким образом, получили в K полное паросочетание-- противоречие первоначальному заданию графа. Значит, начальное предположение не верно, и в G существует полное паросочетание.
+
+
+\subsection*{Задача 6}
+Докажите, что данная КНФ выполнима$ \ldots $\\
+Заметим, что в каждом дизъюнкте, кроме последнего есть хотя бы одно отрицание переменной, которая не $ x_{11} $. Поэтому если мы возьмём исполняющий набор все нули, кроме $ x_{11} $ (а $ x_{11} = 1$), то он будет выполняющем в данной КНФ (так как в каждом дизъюнкте будет хотя бы одна 1)\\
+
+$1\lor \overline{x_{9}}\lor \overline{x_{5}}\lor \overline{x_{14}}\lor \overline{x_{19}}\lor \overline{x_{12}}\lor \overline{x_{18}}\lor \overline{x_{6}}\lor \overline{x_{8}}\lor \overline{x_{10}}\lor \overline{x_{4}}\lor \overline{x_{11}}\lor \overline{x_{7}})\land$\\
+$(x_{13}\lor 1\lor x_{19}\lor \overline{x_{3}}\lor x_{7}\lor \overline{x_{2}}\lor \overline{x_{14}}\lor \overline{x_{10}}\lor x_{8}\lor \overline{x_{11}}\lor \overline{x_{6}}\lor x_{16}\lor \overline{x_{1}})\land$\\
+$1\lor \overline{x_{1}}\lor \overline{x_{3}}\lor x_{2}\lor x_{10}\lor \overline{x_{4}}\lor x_{5}\lor x_{17}\lor x_{7}\lor x_{15}\lor \overline{x_{11}}\lor x_{19}\lor x_{18})\land$\\
+$(x_{17}\lor x_{12}\lor 1\lor x_{3}\lor x_{4}\lor x_{9}\lor x_{16}\lor x_{15}\lor x_{7}\lor x_{8}\lor x_{18}\lor x_{11}\lor x_{19})\land$\\
+$(x_{3}\lor 1\lor \overline{x_{2}}\lor x_{8}\lor x_{10}\lor \overline{x_{17}}\lor \overline{x_{7}}\lor x_{6}\lor \overline{x_{19}}\lor \overline{x_{4}}\lor \overline{x_{16}}\lor x_{1}\lor x_{9})\land$\\
+$(1\lor x_{5}\lor x_{9}\lor x_{6}\lor x_{14}\lor \overline{x_{10}}\lor \overline{x_{12}}\lor \overline{x_{4}}\lor x_{17}\lor x_{18}\lor \overline{x_{1}}\lor x_{13}\lor \overline{x_{2}})\land$\\
+$(1\lor \overline{x_{7}}\lor \overline{x_{14}}\lor \overline{x_{15}}\lor \overline{x_{13}}\lor x_{4}\lor x_{1}\lor x_{17}\lor x_{11}\lor x_{3}\lor \overline{x_{12}}\lor x_{16}\lor x_{8})\land$\\
+$(x_{11}\lor 1\lor \overline{x_{7}}\lor \overline{x_{14}}\lor x_{3}\lor \overline{x_{5}}\lor x_{16}\lor \overline{x_{13}}\lor \overline{x_{1}}\lor x_{9}\lor x_{4}\lor \overline{x_{15}}\lor \overline{x_{2}})\land$\\
+$(x_{18}\lor 1\lor x_{19}\lor x_{17}\lor \overline{x_{1}}\lor x_{14}\lor \overline{x_{3}}\lor x_{7}\lor \overline{x_{9}}\lor \overline{x_{12}}\lor x_{10}\lor x_{11}\lor x_{15})\land$\\
+$(1\lor x_{2}\lor x_{7}\lor x_{16}\lor x_{18}\lor x_{14}\lor \overline{x_{12}}\lor x_{9}\lor \overline{x_{1}}\lor \overline{x_{5}}\lor \overline{x_{4}}\lor \overline{x_{10}}\lor \overline{x_{11}})\land$\\
+$(1\lor \overline{x_{10}}\lor \overline{x_{6}}\lor \overline{x_{2}}\lor \overline{x_{11}}\lor x_{12}\lor \overline{x_{16}}\lor x_{5}\lor x_{13}\lor x_{15}\lor x_{1}\lor x_{14}\lor \overline{x_{4}})\land$\\
+$(x_{5}\lor 1\lor \overline{x_{11}}\lor \overline{x_{16}}\lor \overline{x_{1}}\lor x_{12}\lor \overline{x_{3}}\lor \overline{x_{18}}\lor \overline{x_{4}}\lor \overline{x_{2}}\lor x_{13}\lor x_{6}\lor \overline{x_{14}})\land$\\
+$(1\lor \overline{x_{19}}\lor \overline{x_{9}}\lor x_{1}\lor \overline{x_{5}}\lor \overline{x_{4}}\lor \overline{x_{15}}\lor \overline{x_{10}}\lor x_{17}\lor x_{6}\lor \overline{x_{18}}\lor \overline{x_{11}}\lor \overline{x_{14}})\land$\\
+$(x_{3}\lor 1\lor x_{5}\lor x_{6}\lor x_{14}\lor x_{13}\lor \overline{x_{15}}\lor x_{18}\lor \overline{x_{8}}\lor \overline{x_{11}}\lor \overline{x_{4}}\lor x_{19}\lor \overline{x_{17}})\land$\\
+$(1\lor x_{8}\lor \overline{x_{17}}\lor \overline{x_{13}}\lor x_{10}\lor \overline{x_{9}}\lor \overline{x_{18}}\lor x_{14}\lor \overline{x_{4}}\lor x_{11}\lor \overline{x_{2}}\lor \overline{x_{12}}\lor \overline{x_{6}})\land$\\
+$(1\lor \overline{x_{19}}\lor x_{1}\lor x_{2}\lor \overline{x_{7}}\lor x_{10}\lor \overline{x_{17}}\lor \overline{x_{11}}\lor x_{16}\lor x_{5}\lor \overline{x_{15}}\lor \overline{x_{8}}\lor x_{6})\land$\\
+$(x_{8}\lor x_{18}\lor 1\lor \overline{x_{1}}\lor x_{15}\lor x_{3}\lor \overline{x_{11}}\lor x_{10}\lor \overline{x_{9}}\lor x_{19}\lor \overline{x_{4}}\lor x_{13}\lor \overline{x_{5}})\land$\\
+$(1\lor \overline{x_{16}}\lor \overline{x_{9}}\lor x_{14}\lor \overline{x_{17}}\lor x_{5}\lor \overline{x_{4}}\lor \overline{x_{15}}\lor \overline{x_{10}}\lor \overline{x_{7}}\lor \overline{x_{3}}\lor x_{6}\lor x_{12})\land$\\
+$(x_{4}\lor x_{8}\lor 1\lor \overline{x_{16}}\lor \overline{x_{11}}\lor \overline{x_{5}}\lor \overline{x_{18}}\lor \overline{x_{19}}\lor x_{13}\lor \overline{x_{9}}\lor \overline{x_{7}}\lor x_{1}\lor x_{14})\land$\\
+$(1\lor \overline{x_{3}}\lor x_{9}\lor \overline{x_{7}}\lor \overline{x_{16}}\lor x_{11}\lor x_{1}\lor \overline{x_{8}}\lor \overline{x_{2}}\lor \overline{x_{17}}\lor \overline{x_{19}}\lor \overline{x_{14}}\lor x_{4})\land$\\
+$(1\lor x_{5}\lor \overline{x_{10}}\lor x_{17}\lor x_{4}\lor \overline{x_{1}}\lor \overline{x_{18}}\lor x_{13}\lor x_{8}\lor \overline{x_{15}}\lor x_{2}\lor x_{6}\lor x_{16})\land$\\
+$(1\lor x_{16}\lor x_{8}\lor \overline{x_{9}}\lor \overline{x_{14}}\lor x_{6}\lor \overline{x_{11}}\lor x_{10}\lor \overline{x_{2}}\lor \overline{x_{7}}\lor \overline{x_{4}}\lor x_{18}\lor \overline{x_{15}})\land$\\
+$(x_{10}\lor 1\lor x_{3}\lor x_{2}\lor x_{18}\lor x_{6}\lor x_{8}\lor x_{19}\lor x_{14}\lor x_{17}\lor \overline{x_{9}}\lor x_{13}\lor x_{5})\land$\\
+$(x_{7}\lor x_{4}\lor x_{12}\lor 1\lor \overline{x_{11}}\lor x_{10}\lor x_{3}\lor x_{17}\lor x_{14}\lor \overline{x_{5}}\lor x_{1}\lor x_{19}\lor x_{9})\land$\\
+$(1\lor x_{19}\lor \overline{x_{18}}\lor x_{3}\lor \overline{x_{5}}\lor x_{2}\lor x_{9}\lor x_{8}\lor \overline{x_{14}}\lor x_{17}\lor \overline{x_{6}}\lor \overline{x_{1}}\lor \overline{x_{16}})\land$\\
+$(x_{14}\lor x_{9}\lor x_{8}\lor \overline{x_{11}}\lor x_{2}\lor 1\lor x_{6}\lor x_{4}\lor x_{12}\lor \overline{x_{1}}\lor x_{13}\lor \overline{x_{17}}\lor \overline{x_{18}})\land$\\
+$(1\lor \overline{x_{5}}\lor x_{10}\lor \overline{x_{16}}\lor \overline{x_{1}}\lor x_{7}\lor \overline{x_{17}}\lor x_{8}\lor x_{6}\lor \overline{x_{11}}\lor \overline{x_{2}}\lor \overline{x_{12}}\lor \overline{x_{15}})\land$\\
+$(1\lor \overline{x_{8}}\lor \overline{x_{4}}\lor x_{3}\lor x_{19}\lor x_{9}\lor x_{11}\lor x_{17}\lor \overline{x_{5}}\lor x_{14}\lor x_{16}\lor \overline{x_{18}}\lor \overline{x_{6}})\land$\\
+$(1\lor x_{5}\lor \overline{x_{16}}\lor \overline{x_{4}}\lor x_{18}\lor \overline{x_{8}}\lor \overline{x_{17}}\lor x_{3}\lor x_{7}\lor \overline{x_{6}}\lor x_{14}\lor x_{9}\lor \overline{x_{11}})\land$\\
+$(1\lor \overline{x_{18}}\lor x_{19}\lor x_{13}\lor \overline{x_{4}}\lor \overline{x_{1}}\lor \overline{x_{3}}\lor x_{16}\lor \overline{x_{15}}\lor \overline{x_{2}}\lor \overline{x_{10}}\lor x_{8}\lor x_{6})\land$\\
+$(1\lor x_{14}\lor \overline{x_{5}}\lor \overline{x_{4}}\lor x_{12}\lor \overline{x_{16}}\lor \overline{x_{9}}\lor x_{13}\lor x_{17}\lor x_{2}\lor \overline{x_{7}}\lor x_{6}\lor x_{18})\land$\\
+$(x_{1}\lor 1\lor x_{10}\lor x_{8}\lor \overline{x_{4}}\lor \overline{x_{6}}\lor \overline{x_{12}}\lor \overline{x_{14}}\lor \overline{x_{11}}\lor x_{18}\lor \lor x_{7}\lor \overline{x_{3}})\land$\\
+$(x_{16}\lor x_{5}\lor x_{3}\lor x_{14}\lor x_{18}\lor x_{13}\lor x_{6}\lor x_{7}\lor 1\lor x_{1}\lor x_{12}\lor x_{8}\lor x_{19})$\\ 
+
+Показали, что в каждом из дизъюнктов нашлась 1 $ \longrightarrow $ подобрали исполняющиий набор.\\
+P.s. не совсем понятно, какое решение предпалагалось, кроме подбора исполняющего набора, можно будет затем разобрать на семинаре или обсудить лично
+
+\end{document} % конец документа
