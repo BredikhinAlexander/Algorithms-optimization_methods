@@ -1,0 +1,641 @@
+\documentclass[a4paper,12pt]{article} % тип документа
+
+% report, book
+
+
+
+%  Русский язык
+
+\usepackage[T2A]{fontenc}			% кодировка
+\usepackage[utf8]{inputenc}			% кодировка исходного текста
+\usepackage[english,russian]{babel}	% локализация и переносы
+\usepackage{graphicx}
+\usepackage{tikz}
+\graphicspath{{./}}
+\DeclareGraphicsExtensions{.png,.jpg}
+
+
+% Математика
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools} 
+
+
+\usepackage{wasysym}
+
+%Заговолок
+\author{Бредихин Александр}
+\title{Домашняя работа №3}
+\date{}
+
+
+
+\begin{document} % начало документа
+\maketitle
+\newpage
+
+\section*{General optimization problems}
+\subsection*{Задача 1}
+Give an explicit solution of the following LP.
+$$
+\begin{aligned}
+c^{\top} x & \rightarrow \min _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } A x &=b
+\end{aligned}
+$$
+
+Запишем Лагранжжиан этой задачи: 
+$$
+L(x, \lambda)=c^{T} x+\lambda^{T}(A x-b)
+$$
+Условия KKT:
+$$
+\left\{\begin{array}{l}
+\nabla_x L: \; c+A^{T} \lambda=0 \\
+\nabla_{\lambda} L: \; A x=b
+\end{array}\right.
+$$
+Заметим, что данная задача - выпуклая, так как функцию, которую минимизируем - линейная (выпуклая) и функция, задающая ограничения типа равенств - аффинная.\\
+Если у системы $ Ax = b $ нет решений, то бюджетное множество пустое и решения нет. \\
+Если решение есть, то в общем виде его можно записать через псевдообратную матрицу: 
+$$
+x^{*}=A^{\dagger} b
+$$
+И будет выполнено условие Слейтера: есть решение системы, то есть есть допустимая точка из относительной внутренности бюджетного множества. Следовательно, условия KKT - достаточные и мы получили решение задачи:\\ $ x^{*}=A^{\dagger} b $, оптимальное значение $ p^* = c^{\top} A^{\dagger} b $\\
+если система $ Ax = b $ несовместна, то бюджетное множество пустое и $ p^* = \infty $
+
+\subsection*{Задача 2}
+Give an explicit solution of the following LP.
+$$
+\begin{array}{l}
+c^{\top} x \rightarrow \min\limits_{x \in \mathbb{R}^{n}} \\
+\text { s.t. } 1^{\top} x=1 \\
+x \succeq 0
+\end{array}
+$$
+This problem can be considered as a simplest portfolio optimization problem.\\
+
+Запишем Лагранжиан: 
+$$
+L(x, \lambda, \mu) = c^{\top} x + \lambda \left( 1^{\top} x-1 \right) - \mu^{\top} x
+$$
+Запишем условия KKT:
+$$
+\left\{\begin{array}{l}
+\nabla_x L: \; c+\lambda \cdot 1^{\top}-\mu=0 \\
+\nabla_{\lambda} L: \; 1^{T} x=1 \\
+\mu_{j} \geqslant 0 , \quad j=[1, n] \\
+\mu_{j} x_{j}=0, \quad j=[1, n] \\
+x \succeq 0
+\end{array}\right.
+$$
+
+Заметим, что наша задача выпуклая: так как линейная функция выпуклая (функция для ограничения типа неравенств тоже линейная), функция для ограничения типа равенства - линейная. А также выполнены условия Слейтера: существует допустимая точка - все компоненты вектора $ x $ равны $ \frac{1}{n} $. Для этой точки ограничения типа равенства выполнены, а ограничения типа неравенства выполнены строго (то есть такая точка из относительной внутренности бюджетного множества), значит условия KKT являются достаточными.\\
+
+Возьмём $ x^* = (0,0, \ldots 0,1,0 \ldots, 0) $ где 1 стоит на месте, где у вектора $ c $ минимальная компонента - $ c_i $. Тогда для  $ \lambda^* = -c_i $ и $ \mu_i^* = 0 $ и $ \mu_j^* = c_j - c_i $ (так как $ c_i = \min\limits_{j} c_j \rightarrow c_j - c_i \geq 0 \; \forall j = [1, n]$). Выполнены все условия KKT, следовательно, такие $ x^*, \; \mu^*, \; \lambda^* $ - решение системы, следовательно (так как условия  KKT - достаточные), $ x^* $ - решение исходной задачи.\\
+Оптимальное значение: $ p^* = c_i $
+
+
+\subsection*{Задача 3}
+Give an explicit solution of the following LP.
+$$
+\begin{aligned}
+c^{\top} x & \rightarrow \min _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } 1^{\top} x &=\alpha \\
+0 \preceq & x \preceq 1
+\end{aligned}
+$$
+where $\alpha$ is an integer between 0 and $n .$ What happens if $\alpha$ is not an integer (but satisfies $0 \leq \alpha \leq n$ )? What if we change the equality to an inequality $1^{\top} x \leq \alpha$ ?\\
+
+Запишем Лагранжиан для нашей задачи (в выражении $ \lambda \in R; \; \ \; \mu, \theta \in R^n $): 
+$$
+L(x, \lambda, \mu, \theta)=c^{T} x+\lambda\left(1^{T} x-\alpha\right)+\theta^{T}(x-1)-\mu^{T} x
+$$
+Снова записываем условия KKT:
+$$
+\left\{\begin{array}{l}
+\nabla_x L: \; c+\lambda \cdot 1^{\top}-\mu + \theta=0 \\
+\nabla_{\lambda} L: \; 1^{T} x= \alpha \\
+\mu_{j} \geqslant 0 , \quad j=[1, n] \\
+\theta_{j} \geqslant 0 , \quad j=[1, n] \\
+\mu_{j} x_{j}=0, \quad j=[1, n] \\
+\theta_{j} ( x_{j} - 1)=0, \quad j=[1, n] \\
+0 \preceq  x \preceq 1
+\end{array}\right.
+$$
+
+Условия KKT снова будут достаточными, так как наша задача - выпуклая: функция, задающая ограничения типа равенств - аффинная (линейная), а функции ту, которую мы оптимизируем и те, которые задают ограничения типа неравенств - линейные, следовательно выпуклые. Также выполнено условие Слейтера: возьмём вектор $ x $ с компонентами $ \frac{\alpha}{n} $ (по условию $ \alpha \leq n $). Для этой точки все ограничения типо неравенств выполнены строго и выполнены ограничения типа равенств. Следовательно, она принадлежит относительной внутренности бюджетного множества. Значит условия KKT - достаточные.\\
+
+Б.о.о. считаем, что вектор $ c $ имеет вид
+$$
+c_{1} \leqslant c_{2} \leqslant \ldots \leqslant c_{\alpha} \leqslant \ldots \leqslant c_{n}
+$$ 
+Если это не так, то переставим компоненты вектора $ c $ и соответсвующие им компоненты вектора $ x $ и получим то, что нужно.\\
+
+Покажем, что решением исходной задачи будет такой $ x^* $, что первые его $ \alpha $ координат равны 1, а остальные - 0. Для этого возьмём $ \lambda^*, \mu^*, \theta^* $ такие, что $ x^*, \lambda^*, \mu^*, \theta^* $ - решение исходной системы.\\
+
+Аналогично предыдущей задаче заметим, что если взять $ \lambda = -c_{\alpha} $, и взять $ \mu $ такое, что первые $ \alpha $ координат равны 0, а $ \mu_i^* = c_i + \lambda^*, i = [\alpha+1, n] $ (условие, что $ \mu_j \geq 0 \; \forall j = [1, n]$ выполнено, так как $ c_i - c_{\alpha} \geq 0  $ компоненты вектора $ c $ упорядочены по возрастанию).\\
+А $ \theta^*_i = 0 \; \forall i = [1, \alpha]$ и $ \theta^*_i = -c_i-c_{\alpha} \; \forall i = [\alpha + 1, n] $ тогда условие, что $\theta_{j} ( x_{j} - 1)=0 $ и $\theta_{j} \geqslant 0 , \quad j=[1, n]$ - выполнены (аналогично условиям для $ \mu $). \\
+Для выбранных  $ x^*, \lambda^*, \mu^*, \theta^* $ все условия системы выполнены, следовательно (так как условия KKT - достаточные), $ x^* $ - решение исходной задачи, а оптимальное значение: $ p^* = c_1 + \ldots + c_{\alpha} $ \\
+
+В случае, если $ \alpha \notin Z $:\\
+Аналогично предыдущему случаю только теперь $x^*_i = 1 $ для $ i = [1, [\alpha] - 1] $ И $ x^*_{[\alpha]} = 1 + \alpha - \left[ \alpha \right] $. $\lambda^*, \mu^*, \theta^* $ из предыдущего пункта. Получаем решение системы, следовательно и решение нашей задачи. \\
+Оптимальное значение: $ p^* = c_1 + \ldots + c_{\left[\alpha \right] - 1} + c_{\left[\alpha \right]} \left( 1 + \alpha - \left[ \alpha \right]  \right) $\\
+
+В случае $1^{\top} x \leq \alpha$.\\
+Если все компоненты вектора $ c $ неотрицательны, то понятно, что минимум достигается при $ x^* = 0 $ (так как отрицательное число мы получить не можем, а 0 достигается в этой точке).\\
+Если же у $ c $ есть отрицательные компонеты, то понятно, что минимумом будет сумма первых $ \alpha $ самых отрицательных компонент (в качестве $ x^* $ возьмём вектор с 1 в компонентах, где у вектора $ c $ самые отрицательные компоненты, а все остальные - 0) \\
+Если отрицательных компанент меньше чем $ \alpha $ то возьмём первые $ \alpha $ по возрастанию
+
+
+
+\subsection*{Задача 4}
+Give an explicit solution of the following QP.
+$$
+\begin{array}{r}
+c^{\top} x \rightarrow \min\limits _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } x^{\top} A x \leq 1
+\end{array}
+$$
+where $A \in \mathbb{S}_{++}^{n}, c \neq 0 .$\\ What is the solution if the problem is not convex $\left(A \notin \mathbb{S}_{++}^{n}\right)$ (Hint:
+consider eigendecomposition of the matrix: $A=Q \operatorname{diag}(\lambda) Q^{\top}=\sum_{i=1}^{n} \lambda_{i} q_{i} q_{i}^{\top}$ ) and different cases of $\lambda>0, \lambda=0, \lambda<0 ?$\\
+
+В случае, если матрица $A \in \mathbb{S}_{++}^{n} $\\
+Лагранжиан для данной задачи ($ \mu \in R $): 
+$$L(x, \mu)=c^{T} x+\mu\left(x^{T} A x-1\right)$$
+Условия KKT:
+$$
+\left\{\begin{array}{l}
+\nabla_{x} \mathrm{~L}(x, \mu): \; c+\mu\left(A+A^{\top}\right) x=0 \\
+\mu \geqslant 0 \\
+\mu\left(x^{\top} A x-1\right)=0 \\
+x^{\top} A x-1 \leqslant 0
+\end{array}\right.
+$$
+
+В этом случае условия KKT будут достаточными, так как наша задача - выпуклая: функция та, которую мы оптимизируем - линейная (выпуклая), функция, которая задаёт ограничения типа неравенств - выпуклая (так как матрица положительно определена, то задаёт параболу). Также выполнено условие Слейтера: возьмём произвольный вектор $ x $. Для него $ l = x^T A x \geq 0 $, так как матрица положительно определена. Можем взять вектор $ x' = \frac{x}{ \sqrt{2 \| l \|}} $, тогда $ x'^T A x' = \frac{1}{2} $. Для этой точки все ограничения типо неравенств выполнены строго. Следовательно, она принадлежит относительной внутренности бюджетного множества. Значит условия KKT - достаточные.\\
+
+Из первого условия и того, что $ c \neq 0 $ следует, что $ \mu \neq 0 $, значит, из 3го условия, $ x^{\top} A x = 1 $ . $ A \in S^n_+ \rightarrow A^T = A $, следовательное, первое условие можем переписать как: $c+2 \mu A x=0$. Выражаем отсюда $ x $ и подставляем в преобразованное 3ие условие:
+$$
+x=-\frac{A^{-1} c}{2 \mu}
+$$
+$$
+x^{\top} A x=\frac{c^{\top} A^{-1} c}{4 \mu^{2}}=1
+$$
+Получаем значение $ \mu $:
+$$
+\mu=\frac{1}{2} \sqrt{c^{T} A^{-1} c}
+$$
+Таким образом решение нашей задачи в этом случае (так как KKT - достаточные условия): 
+$$
+x^{*}=-\frac{A^{-1} c}{\sqrt{c^{T} A^{-1} c}}
+$$
+А оптимальное значение: $ p^* = -\sqrt{c^{T} A^{-1} c} $\\
+
+В случае, если матрица $ A $ не положительно определена, тогда уже $ KKT $ не достаточное условие (так как задача перестаёт быть выпуклой). Из подсказки: воспользуемся спектральным разложением матрицы $A=\sum\limits_{i=1}^{n} \lambda_{i} q_{i} q_{i}^{\top}$\\
+
+Если все собственные значения больше 0, то есть $ \lambda_{i} > 0, \; i = [1. n] $, то матрица положительно определена (по определению) и этот случай мы уже рассмотрели.\\
+Если одно из собсвенных чисел равно 0 или отрицательно, то возьмём соответствующую компоненту вектора $ x $ бесконечно отрицательной (или положительной, смотря какой $ c_i $) и тогда $ x^T A x \leq 1 $, а минимум функции $ -\infty $
+
+
+\subsection*{Задача 5}
+Give an explicit solution of the following QP.
+$$
+\begin{array}{c}
+c^{\top} x \rightarrow \min\limits _{x \in \mathbb{R}^{n}} \\
+\text { s.t. }\left(x-x_{c}\right)^{\top} A\left(x-x_{c}\right) \leq 1
+\end{array}
+$$
+where $A \in \mathbb{S}_{++}^{n}, c \neq 0, x_{c} \in \mathbb{R}^{n}$\\
+
+1ый способ: \\
+Сделаем замену: $ z = x - x_c $. Покажем, что задача 
+$$
+\begin{array}{c}
+c^{\top} z \rightarrow \min\limits _{z \in \mathbb{R}^{n}} \\
+\text { s.t. }z^{\top} Az \leq 1
+\end{array}
+$$
+эквивалентна исходной, действительно: $ c^{\top} x=c^{\top} z+c^{\top} x_{c}$, следовательно, $ c^{\top} x $ - минимально, когда $ c^{\top} z $ - минимально. Если посмотреть на полученную задачу, то поймём, что это задача 4, которую уже решили и для неё можем записать ответ:
+$$
+z^* = -\frac{A^{-1} c}{\sqrt{c^{T} A^{-1} c}}
+$$ 
+а оптимальное значение (учитывая константу $c^{\top} x_{c}$)
+$$
+p^{*}=c^{T} x_{c}-\sqrt{c^{T} A^{-1} c}
+$$
+
+2ой способ:\\
+Можно теми же преобразованиями, что и в 4ой задачи честно решить через KKT\\
+В этом случае Лагранжиан записывается как:
+$$
+L(x, \mu)=c^{T} x+\mu\left(\left(x-x_{c}\right)^{T} A\left(x-x_{c}\right)-1\right)
+$$
+Условия KKT (сразу учитывая, что в этой задаче $ A \in \mathbb{S}_{++}^{n} $)
+
+$$
+\left\{\begin{array}{l}
+\nabla_{x} \mathrm{~L}(x, \mu): \; c+2 \mu A\left(x-x_{c}\right)=0 \\
+\mu \geqslant 0 \\
+\mu\left(\left(x-x_{c}\right)^{T} A\left(x-x_{c}\right)-1\right)=0 \\
+\left(x-x_{c}\right)^{T} A\left(x-x_{c}\right) \leqslant 1
+\end{array}\right.
+$$
+Условия KKT будут достаточными, такие же рассуждения, как и в задаче 4 с положительно определённой матрицей, при которой функция $\left(x-x_{c}\right)^{\top} A\left(x-x_{c}\right) - 1$ - выпуклая.\\ 
+Из 1го условия выражаем $ x $:
+$$
+x=x_{c}-\frac{1}{2 \mu} A^{-1} c
+$$
+Их 3го условия, так как $ \mu \neq 0 $ (иначе из 1го условия получим, что $ c = 0 $, а это по условию не так), получаем:
+$$
+\left(x-x_{c}\right)^{T} A\left(x-x_{c}\right)=1
+$$
+Подставляем сюда выраженный $ x $ и находим значение $ \mu $:
+$$
+\mu=\frac{1}{2} \sqrt{c^{T} A^{-1} c}
+$$
+Так как KKT - достаточные условия, получаем решения задачи: 
+$$
+x^{*}=x_{c}-\frac{A^{-1} c}{\sqrt{c^{T} A^{-1} c}}
+$$
+А оптимальное значение:
+$$
+p^{*}=c^{T} x_{c}-\sqrt{c^{T} A^{-1} c}
+$$
+Что совпадает с решением, полученным 1ым способом!
+
+
+\subsection*{Задача 6}
+Give an explicit solution of the following QP.
+$$
+\begin{array}{r}
+x^{\top} B x \rightarrow \min\limits _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } x^{\top} A x \leq 1 \\
+\text { where } A \in \mathbb{S}_{++}^{n}, B \in \mathbb{S}_{+}^{n} .
+\end{array}
+$$
+
+По условию $ B \in \mathbb{S}_{+}^{n}  $, то есть положительно полуопределена. Это по определению значит, что для любого $ x \in \mathbb{R}^{n} \rightarrow x^{\top}Bx \geq 0$. Понятно, что минимальное значение - 0 достигается при $ x^* = 0 $ и это значение лежит в бюджетном множестве: $ x^{*\top} A x^* = 0 < 1 $, значит, мы решили задачу:\\
+оптимальное значение $ p^* = 0 $ при $ x = 0 $
+
+\subsection*{Задача 7}
+Consider the equality constrained least-squares problem
+$$
+\begin{array}{l}
+\|A x-b\|_{2}^{2} \rightarrow \min\limits _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } C x=d
+\end{array}
+$$
+where $A \in \mathbb{R}^{m \times n}$ with $\operatorname{rank} A=n,$ and $C \in \mathbb{C}^{k \times n}$ with $\operatorname{rank} C=k$. Give the KKT conditions, and derive expressions for the primal solution $x^{*}$ and the dual solution $\lambda^{*}$.\\
+
+Лагранжиан для данной задачи:
+$$
+L(x, \lambda)=\|A x-b\|_{2}^{2}+\lambda^{T}(C x-b)
+$$
+Условия KKT:
+$$
+\left\{\begin{array}{l}
+\nabla_{x} \mathrm{~L}(x, \lambda): 2 A^{T}(A x-b)+C^{T} \lambda=0 \\
+\nabla_{\lambda} \mathrm{~L}(x, \lambda): C x=d
+\end{array}\right.
+$$
+
+Из 1го условия выражаем $ x $:
+$$
+2 A^{T}A x = 2 A^{T}b-C^{T} \lambda \rightarrow x = \frac{1}{2}\left(A^{T} A\right)^{-1}\left(2 A^{T} b-C^{T} \lambda\right)
+$$
+Из 2го условия выражаем $ x = C^{-1} d $ и подставляем в полученное выражение, находим $ \lambda $:
+$$
+C^{-1} d = \left(A^{T} A\right)^{-1} A^{T} b - \frac{1}{2 } \left(A^{T} A\right)^{-1} C^T \lambda
+$$
+
+$$
+\left(A^{T} A\right)^{-1} C^T \lambda = 2 \left( \left(A^{T} A\right)^{-1} A^{T} b - C^{-1} d  \right)
+$$
+Следовательно: 
+$$
+\lambda=2\left(C\left(A^{T} A\right)^{-1} C^{T}\right)^{-1}\left(C\left(A^{T} A\right)^{-1} A^{T} b-d\right)
+$$
+Тогда, подставляя полученное $ \lambda $ в выражение для $ x $, получим: 
+$$
+x=\frac{1}{2}\left(A A^{T}\right)^{-1}\left(2 A^{T} b-2C^{T} \left(C\left(A^{T} A\right)^{-1} C^{T}\right)^{-1}\left(C\left(A^{T} A\right)^{-1} A^{T} b-d\right)\right)
+$$
+
+Данная задача выпуклая, так как функция, задающая ограничения типа равенств - линейная, а функцию, которую оптимизируем - выпуклая.\\
+Если система $ Cx = d $ несовместна, то бюджетное множество пустое и оптимальное значение принимаем за $ p^* = \infty $\\
+Иначе решение системы можно записать через псевдообратную матрицу $ x = C^{\dagger} d $ и будет выполнено условие Слейтера (будет существовать допустимая точка, в которой все ограничения типа равенств выполнены, то есть она принадлежит относительной внутренности бюджетного множества), значит, в этом случае условия KKT - достаточные и полученное ранее 
+$$
+x^*=\left(A A^{T}\right)^{\dagger}\left( A^{T} b-C^{T} \left(C\left(A^{T} A\right)^{\dagger} C^{T}\right)^{\dagger}\left(C\left(A^{T} A\right)^{\dagger} A^{T} b-d\right)\right)
+$$
+-решение задачи (вместо обратных нужно брать псевдообратные матрицы, так как из условий задачи обратные могут не существовать. Все выкладки с псевдообратными совпадают с просто обратной)
+
+
+\subsection*{Задача 8}
+Derive the KKT conditions for the problem
+$$
+\begin{array}{l}
+\quad \operatorname{tr} X-\log \operatorname{det} X \rightarrow \min\limits _{X \in \mathbb{S}_{++}^{n}} \\
+\text { s.t. } X s=y
+\end{array}
+$$
+where $y \in \mathbb{R}^{n}$ and $s \in \mathbb{R}^{n}$ are given with $y^{\top} s=1$. Verify that the optimal solution is given by
+$$
+X^{*}=I+y y^{\top}-\frac{1}{s^{\top} s} s s^{\top}
+$$
+
+Лагранжиан для данной задачи:
+$$
+L(X, \lambda)=\operatorname{tr} X-\log \operatorname{det} X+\lambda^{T}(X s-y)
+$$
+Условия KKT:
+$$
+\left\{\begin{array}{l}
+\nabla_{x} \mathrm{~L}(x, \lambda): I-X^{-1}+\lambda s^{T}=0 \\
+\nabla_{\lambda} \mathrm{~L}(x, \lambda): X s=y
+\end{array}\right.
+$$
+Условия KKT в нашем случае являются достаточными, так как задача выпуклая: ограничения типа равенств - линейные, а функцию, которую минимизируем - выпуклая (из первого задания). Также выполнено условие Слейтера: можем подобрать такую матрицу  $ X \in \mathbb{S}_{++}^{n} $, что для неё выполнено $ X s=y $, значит есть допустимая точка. \\
+
+Из второго условия KKT: $ s = X^{-1} y $. Первое условие можем переписать как: 
+$$
+I-X^{-1}+\frac{1}{2}\left(\lambda s^{T}+s \lambda^{T}\right)=0
+$$
+Домножая его справа на $ y $ и пользуясь тем, что $ s^T y = 1 $, получим:
+$$
+y-s+\frac{1}{2}\left(\lambda+s \lambda^{T} y\right)=0
+$$
+Домножим полученное выражение слева на $ y^T $ и снова используя условие, что $ s^T y = 1 $, получим:
+$$
+1=y^{T} y+\lambda^{T} y \rightarrow \lambda^{T} y=1-y^{T} y
+$$
+Подставляем в предыдущие уравнение и выражаем $ \lambda $:
+$$
+\lambda=-2 y+\left(1+y^{T} y\right) s
+$$
+Подставляем в 1ое условие KKT и находим выражение для $ X^{-1} $:
+$$
+X^{-1}=I+\left(1+y^{T} y\right) s s^{T}-y s^{T}-s y^{T}
+$$
+Чтобы матрица $ X^* $ задавала решение (так как KKT - достаточные условия в этой задачи), то нужно проверить, что $ X^{-1} X^* = \mathrm{I} $. Делаем это подстановкой и раскрытием скобок:
+$$
+X^{-1} X^* = \left(\mathrm{I}-\mathrm{ys}^{\mathrm{T}}-\mathrm{s} \mathrm{y}^{\mathrm{T}}+\left(1+\mathrm{y}^{\mathrm{T}} \mathrm{y}\right) \mathrm{ss}^{\mathrm{T}}\right)\left(\mathrm{I}+\mathrm{y} \mathrm{y}^{\mathrm{T}}-\left(\frac{1}{\mathrm{s}^{\mathrm{T}} \mathrm{s}} \right) \mathrm{ss}^{\mathrm{T}}\right)=
+$$
+$$
+=\left(\mathrm{I}+\mathrm{y} \mathrm{y}^{\mathrm{T}}-\left(\frac{1}{\mathrm{s}^{\mathrm{T}} \mathrm{s}}\right) \mathrm{ss}^{\mathrm{T}}\right)+\left(1+\mathrm{y}^{\mathrm{T}} \mathrm{y}\right) \mathrm{ss}^{\mathrm{T}}+\left(1+\mathrm{y}^{\mathrm{T}} \mathrm{y}\right) \mathrm{s} \mathrm{y}^{\mathrm{T}}-\left(1+\mathrm{y}^{\mathrm{T}} \mathrm{y}\right) \mathrm{ss}^{\top} -
+$$
+$$
+-y s^{\top}-y y^{\top}+y s^{\top}-s y^{\top}-\left(y^{\top} y\right) s y^{\top}+s s^{\top}\left(\frac{1}{s^{\top} s}  \right)=I
+$$
+
+Ещё нужно проверить, что $ X^* $ - положительно определена. По определению $ \forall x $:
+$$
+x^{\top}\left(\mathrm{I}+y y^{\top}-\left(\frac{1}{s^{\top} s} \right) s s^{\top}\right) x=x^{\top} x+\left(y^{\top} x\right)^{\top}\left(y^{\top} x\right)-\left(s^{\top} x\right)^{\top}\left(s^{\top} x\right)\left(\left(\frac{1}{s^{\top} s}\right)\right)
+$$
+$$
+=\|x\|^{2}+(y, x)^{2}-\frac{(s, x)^{2}}{\|s\|^{2}} 
+$$
+Понятно, что $ \|x\|^{2} - (s, x)^{2} /\|s\|^{2} \geq 0$, следовательно, показали, что $ \forall x : x^{\top}X^* x \geq 0 $, значит $ X^* $ положительно определена и следовательно является решением поставленной задачи.
+
+
+
+
+\subsection*{Задача 9}
+Supporting hyperplane interpretation of KKT conditions. Consider a convex problem with no equality constraints
+$$
+\begin{array}{c}
+f_{0}(x) \rightarrow \min _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } f_{i}(x) \leq 0, \quad i=[1, m]
+\end{array}
+$$
+Assume, that $\exists x^{*} \in \mathbb{R}^{n}, \mu^{*} \in \mathbb{R}^{m}$ satisfy the KKT conditions
+$$
+\begin{array}{l}
+\nabla_{x} L\left(x^{*}, \mu^{*}\right)=\nabla f_{0}\left(x^{*}\right)+\sum_{i=1}^{m} \mu_{i}^{*} \nabla f_{i}\left(x^{*}\right)=0 \\
+\mu_{i}^{*} \geq 0, \quad i=[1, m] \\
+\mu_{i}^{*} f_{i}\left(x^{*}\right)=0, \quad i=[1, m] \\
+f_{i}\left(x^{*}\right) \leq 0, \quad i=[1, m]
+\end{array}
+$$
+Show that
+$$
+\nabla f_{0}\left(x^{*}\right)^{\top}\left(x-x^{*}\right) \geq 0
+$$
+for all feasible $x$. In other words the KKT conditions imply the simple optimality criterion or $\nabla f_{0}\left(x^{*}\right)$ defines a supporting hyperplane to the feasible set at $x^{*}$\\
+
+Возьмём $ x $ - допустимое и используя условия KKT покажем, что $ \nabla f_{0}\left(x^{*}\right)^{\top}\left(x-x^{*}\right) \geq 0 $: буду сводить к 1му дифференциальному критерию выпуклой функции (а у нас выпукаля функция $ f_0 $ по условию), который записывается как: 
+$$
+f_0(x) \geq f_0(x^*)+\nabla f_0^{T}(x^*)(x-x^*)
+$$
+\\
+Из условия, что градиент по $ x $ от Лагранжиана равен нулю, получаем: 
+$$
+\nabla f_{0}\left(x^{*}\right)^{\top}\left(x-x^{*}\right) = - \sum_{i=1}^{m} \mu_{i}^{*} \nabla f_{i}^{T}\left(x^{*}\right) \left(x-x^{*}\right)
+$$
+так как $ f_{i}(x) \leq 0, \quad i=[1, m] $ (по постановке задачи), а из условий KKT:\\
+$ \mu_{i}^{*} \geq 0, \quad i=[1, m] $ \\
+$ \mu_{i}^{*} f_{i}\left(x^{*}\right)=0, \quad i=[1, m] $, то можно записать следующие неравенство: 
+
+$$
+\nabla f_{0}\left(x^{*}\right)^{\top}\left(x-x^{*}\right) =
+$$
+$$
+ = - \sum_{i=1}^{m} \mu_{i}^{*} \nabla f_{i}^{T}\left(x^{*}\right) \left(x-x^{*}\right) \geqslant-\sum_{i=1}^{m} \mu_{i}^{*} \nabla f_{i}^{\top}\left(x^{*}\right)\left(x-x^{*}\right)+\sum_{i=1}^{m} \mu_{i}^{*}\left(f_{i}(x)-f_{i}\left(x^{*}\right)\right)=
+$$
+$$
+=\sum_{j=1}^{m} \mu_{i}^{*}\left(\left(f_{i}(x)-f_{i}\left(x^{*}\right)\right)-\nabla f_{i}^{\top}\left(x^{*}\right)\left(x-x^{*}\right)\right) \geqslant 0
+$$
+Так как как раз в скобках получили дифференциальный критерий 1го порядка для выпуклой функции. Следовательно, доказали, что для любой допустимой $ x $ выполнено:
+$$
+\nabla f_{0}\left(x^{*}\right)^{\top}\left(x-x^{*}\right) \geq 0
+$$
+
+
+\newpage
+
+\section*{Duality}
+\subsection*{Задача 1}
+Fenchel + Lagrange = $ \heartsuit $. Express the dual problem of
+$$
+\begin{aligned}
+c^{\top} x & \rightarrow \min _{x \in \mathbb{R}} \\
+\text { s.t. } f(x) & \leq 0
+\end{aligned}
+$$
+with $c \neq 0,$ in terms of the conjugate function $f^{*}$. Explain why the problem you give is convex. We do not assume $f$ is convex.\\
+
+Лагранжиан для этой задачи: 
+$$L(x, \mu)=c^{T} x+\mu f(x)$$
+Записываем по определению двойственную функцию и сводим к сопряжённой (в следующей задаче вывел для более общего случая):
+$$
+g(\mu)=\inf\limits _{x}\left(c^{T} x+\mu f(x)\right)=-\mu \sup \left(-\frac{c^{T} x}{\mu}-f(x)\right)=-\mu f^{*}\left(-\frac{c}{\mu}\right)
+$$
+Область определения двойственной функции задаётся областью определения сопряжённой, следовательно dual problem записываем так: 
+
+$$
+\begin{aligned}
+&\mu f^{*}\left(-\frac{c}{\mu}\right)  \rightarrow \min _{\mu} \\
+&\text { s.t. } \mu \geq 0, \; -\frac{c^{\top}}{\mu} \in \operatorname{dom} f^{*}
+\end{aligned}
+$$
+
+Знаем, что двойственная функция всегда вогнута. При домножении на неотрицательное число $ \mu \geq 0 $ (из области определения) вогнутость не потеряется, значит, получаем выпуклую задачу (вогнутая функция со знаком минус - выпуклая и мы её максимизируем). Ограничения типа неравенств - линейные, то есть выпуклые.
+
+
+
+
+\subsection*{Задача 2}
+Minimum volume covering ellipsoid.\\
+Let we have the primal problem:
+$$
+\begin{array}{l}
+\ln \operatorname{det} X^{-1} \rightarrow \min\limits_{X \in \mathbb{S}_{++}^{n}} \\
+\text { s.t. } a_{i}^{\top} X a_{i} \leq 1, i=1, \ldots, m
+\end{array}
+$$
+1. Find Lagrangian of the primal problem\\
+2. Find the dual function\\
+3. Write down the dual problem\\
+4. Check whether problem holds strong duality or not\\
+5. Write down the solution of the dual problem\\
+
+Заметим, что ограничения типа неравенств в нашей задаче аффины и их можно переписать как: 
+$$
+\operatorname{tr}\left(\left(a_{i} a_{i}^{T}\right) X\right) \leq 1
+$$
+Теперь запишем Лагранжиан для поставленной задачи
+$$
+\mathrm{L}(\mathrm{X}, \mu)=\ln \operatorname{det} \mathrm{X}^{-1}+\sum_{i=1}^{\mathrm{m}} \lambda_{\mathrm{i}}\left(\mathrm{a}_{\mathrm{i}}^{\mathrm{T}} \mathrm{Xa}_{\mathrm{i}}-1\right)
+$$
+
+На семинаре разбирали, как записывать dual function через сопряжённую функцию, а сопряжённую функцию к $ \ln \operatorname{det} X^{-1} $ уже находили в 5ой задаче 2го домашнего задания и получили: 
+$$
+f_{0}^{*}(Y)=\log \operatorname{det}(-Y)^{-1}-n
+$$
+Повторим эти небольшие выкладки из семинара для задачи в общей форме, а потом используем полученный результат к нашей проблеме:
+$$
+\begin{array}{ll}
+\operatorname{minimize} & f_{0}(x) \\
+\text { subject to } & A x \preceq b \\
+& C x=d
+\end{array}
+$$
+$$
+\begin{aligned}
+g(\lambda, \nu) &=\inf _{x}\left(f_{0}(x)+\lambda^{T}(A x-b)+\nu^{T}(C x-d)\right) \\
+&=-b^{T} \lambda-d^{T} \nu+\inf _{x}\left(f_{0}(x)+\left(A^{T} \lambda+C^{T} \nu\right)^{T} x\right) \\
+&=-b^{T} \lambda-d^{T} \nu-f_{0}^{*}\left(-A^{T} \lambda-C^{T} \nu\right)
+\end{aligned}
+$$
+Область определения двойственной функции определяется областью определения сопряжённой к исходной функции:
+$$
+\operatorname{dom} g=\left\{(\lambda, \nu) \mid-A^{T} \lambda-C^{T} \nu \in \operatorname{dom} f_{0}^{*}\right\}
+$$
+
+В нашем случае оганичений типа неравенств нет, вектор $ b = \mathbf{1}^{T} $ матрица $ A = a_i a_i^{\top} $, $
+\operatorname{dom} f_{0}^{*}=-\mathbf{S}_{++}^{n}
+$ Получается dual function: 
+
+
+$$
+g(\lambda)=\left\{\begin{array}{ll}
+\log \operatorname{det}\left(\sum_{i=1}^{m} \lambda_{i} a_{i} a_{i}^{T}\right)-\mathbf{1}^{T} \lambda+n & \sum_{i=1}^{m} \lambda_{i} a_{i} a_{i}^{T} \succ 0 \\
+-\infty & \text { иначе }
+\end{array}\right.
+$$
+
+Следовательно двойственную задачу мы можем записать как: 
+$$
+\begin{array}{ll}
+\operatorname{maximize} & \log \operatorname{det}\left(\sum_{i=1}^{m} \lambda_{i} a_{i} a_{i}^{T}\right)-\mathbf{1}^{T} \lambda+n \\
+\text { s.t. } & \lambda \succeq 0
+\end{array}
+$$
+
+В этой задаче выполняется условие Слейтера: всегда существует $
+X \in \mathbf{S}_{++}^{n} \text { для которой } a_{i}^{T} X a_{i} < 1, \text { для } i=1, \ldots, m
+$ то есть есть допустимая точка. Значит, в этой задаче есть сильная двойственность между прямой и двойственной задачами 
+
+
+\subsection*{Задача 3}
+A penalty method for equality constraints. We consider the problem minimize
+$$
+\begin{array}{l}
+f_{0}(x) \rightarrow \min\limits _{x \in \mathbb{R}^{n}} \\
+\text { s.t. } A x=b
+\end{array}
+$$
+where $f_{0}(x): \mathbb{R}^{n} \rightarrow \mathbb{R}$ is convex and differentiable, and
+$$
+\alpha \in \mathbb{R}^{m \times n}
+$$
+with $\operatorname{rank} A=m .$ In a quadratic penalty method, we form an auxiliary function $\phi(x)=f_{0}(x)+\alpha\|A x-b\|_{2}^{2}$
+where $\alpha>0$ is a parameter. This auxiliary function consists of the objective plus the penalty term $\alpha\|A x-b\|_{2}^{2}$. The idea is that a minimizer of the auxiliary function, $\tilde{x},$ should be an approximate solution of the original problem. Intuition suggests that the larger the penalty weight $\alpha,$ the better the approximation $\tilde{x}$ to a solution of the original problem. Suppose $\tilde{x}$ is a minimizer of $\phi(x) .$ Show how to find, from $\tilde{x},$ a dual feasible point for the original problem. Find the corresponding lower bound on the optimal value of the original problem.\\
+
+Запишем Лагранжиан для данной задачи: 
+$$
+L(x, \lambda)=f_{0}(x)+\lambda^{T}(A x-b)
+$$
+
+В точке $\tilde{x}$ функция $\phi(x)$ достигает своего минимального значения, следовательно, по необходимому условию экстремума: $$ \nabla \phi(\tilde{x}) = 0 \Leftrightarrow \nabla f_{0}(\tilde{x})+2 \alpha A^{T}(A \tilde{x}-b)=0$$ 
+
+Посмотрим, в какой точке достигается минимум Лагранжиана: $$ \nabla L(x, \lambda) = \nabla f_{0}(x)+ A^{\top} \lambda $$
+
+Заметим, что при $ \lambda^* = 2 \alpha (A \tilde{x} - b ) $, мы получаем выражение из градиента $ \phi $, которое равно 0. Следовательно, (так как $ f_0 $ - выпуклая по условию, а $(A x - b ) $ - линейная, то есть Лагранжиан выпуклая функция) то, равенство градиента нулю - достаточное условие экстремума и $ L(x, \lambda^*) $ достигает минимума на $ \tilde{x} $.\\
+По определению двойственной функции:
+$$
+g(\lambda)=\inf _{x}\left(f_{0}(x)+\lambda(A x-b)\right) = \inf _{x} (L(x, \lambda))
+$$
+$$
+g(\tilde{\lambda})=f_{0}(\tilde{x})+\alpha\|A \tilde{x}-b\|_{2}^{2}
+$$
+Получается, для таких $ x: \; Ax = b $ выполнено:
+$$
+f_{0}(x) \geqslant g(\tilde{\lambda})=f_{0}(\tilde{x})+\alpha\|A \tilde{x}-b\|_{2}^{2}
+$$ 
+Получили нижнюю границу на оптимальное значение прямой задачи. 
+
+
+\subsection*{Задача 4}
+Analytic centering. Derive a dual problem for
+$$
+-\sum_{i=1}^{m} \log \left(b_{i}-a_{i}^{\top} x\right) \rightarrow \min _{x \in \mathbb{R}^{n}}
+$$
+with domain $\left\{x \mid a_{i}^{\top} x<b_{i}, i=[1, m]\right\} .$ First introduce new variables $y_{i}$ and equality constraints $y_{i}=b_{i}-a_{i}^{\top} x$. (The solution of this problem is called the analytic center of the linear inequalities $a_{i}^{\top} x \leq b_{i}, i=[1, m] .$ Analytic centers have geometric applications, and play an important role in barrier methods.) with domain $\left\{x \mid a_{i}^{\top} x<b_{i}, i=[1, m]\right\}$. \\
+
+Пользуясь подсказкой сделаем замену переменных: $y_{i}=b_{i}-a_{i}^{\top} x$ или можно её записать как $ y = b - Ax $, где матрица $A \in \mathbb{R}^{m \times n} $ где $ a_{i}^{T} $ строки у матрицы $ A $\\
+Тогда получим задачу: 
+$$
+\begin{array}{l}
+-\sum_{i=1}^{m} \log \left(y_{i}\right) \rightarrow \min \\
+\text { s.t. } y = b - Ax 
+\end{array}
+$$
+Лагранжиан полученной задачи: 
+$$
+\mathrm{L}(x, y, \mu)=-\sum_{i=1}^{m} \log y_{i}+\mu^{\top}(y-b+A x)
+$$
+По определению двойственная функция: 
+$$
+g(\mu)=\inf _{x, y}\left(-\sum_{i=1}^{m} \log \left(y_{i}\right)+\mu^{T}(y-b-A x)\right)
+$$
+Слагаемое $ \mu^{\top}Ax $ неограничено снизу по $ x $, то есть всегда можем взять такой $ x $ что оно уйдёт в $ -\infty $, следовательно, чтобы минимум был не $ -\infty $, нужно $ A^{\top} \mu = 0 $\\
+Для нахождения минимума приравниваем градиент к нулю (то что это минимум легко проверить взяв ещё раз градиент, получим сумму $ \sum\limits_{i=1}^{m} \left( \frac{1}{y_i}^2 \right) \geq 0 $, следовательно, минимум). Минимум достигается при $ y_i = \frac{1}{\mu_i} $\\
+Так как $ y_i > 0 $ (стоят под логарифмом), то область определения двойственной функции:
+$$
+A^{\top} \mu = 0 \; \text{и} \; \mu \succ 0
+$$
+а сама двойственная функция:
+$$
+g(\mu)=\left\{\begin{array}{l}
+\sum\limits_{i=1}^{m} \log \mu_{i}+m-\mu^{\top} b, \quad A^{\top} \mu=0, \; \mu \succ 0  \\
+-\infty, \text { иначе }
+\end{array}\right.
+$$
+Тогда двойственная задача имеет вид:
+$$
+\begin{array}{l}
+\sum\limits_{i=1}^{m} \log \left(\mu_{i}\right)+m-\mu^{\top} b \rightarrow \max\limits _{\mu} \\
+\quad \text { s.t. } \quad A^{T} \mu=0, \quad \mu \succ 0
+\end{array}
+$$
+
+\end{document}
+
